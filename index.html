@@ -4,13 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Glitch-Inspired Code Editor</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css"
+    />
     <link rel="stylesheet" href="/editor.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/css/css.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/htmlmixed/htmlmixed.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --color-bg: #f7f7f8;
@@ -20,8 +26,8 @@
         --color-accent: #5c6ac4;
         --color-muted: #888;
         --color-white: #fff;
-        --font-ui: 'Inter', sans-serif;
-        --font-code: 'Fira Code', monospace;
+        --font-ui: "Inter", sans-serif;
+        --font-code: "Fira Code", monospace;
         --transition: all 0.2s ease;
         --btn-radius: 4px;
       }
@@ -58,6 +64,7 @@
         font-family: var(--font-ui);
       }
       #main {
+        position: relative;
         flex: 1;
         display: flex;
         overflow: hidden;
@@ -182,7 +189,7 @@
         <button class="btn" id="htmlFile">index.html</button>
         <button class="btn" id="cssFile">style.css</button>
         <button class="btn" id="jsFile">script.js</button>
-        <hr />
+        <h3>Project</h3>
         <button class="btn" id="createFile">+ Create File</button>
         <div class="toggle">
           <input type="checkbox" id="autorefresh" checked />
@@ -193,13 +200,31 @@
           <button class="icon-btn" id="copyLink">⧉ Copy</button>
         </div>
       </div>
-      <div id="editor-container" style="flex-basis: 50%;">
+      <div id="editor-container" style="flex-basis: 50%">
         <textarea id="editor"></textarea>
       </div>
       <div id="resizer"></div>
-      <div id="preview-pane" style="flex: 1;">
+      <div id="preview-pane" style="flex: 1">
+        <div
+          id="iframe-overlay"
+          style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            z-index: 9999;
+            cursor: col-resize;
+          "
+        ></div>
+
         <div id="preview-bar">
-          <input id="preview-url" readonly value="https://glitch-editor.local/preview" />
+          <input
+            id="preview-url"
+            readonly
+            value="https://glitch-editor.local/preview"
+          />
         </div>
         <iframe id="preview"></iframe>
       </div>
@@ -211,12 +236,15 @@
     <script src="/script.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
-          mode: "htmlmixed",
-          theme: "glitch-light",
-          lineNumbers: true,
-          lineWrapping: true,
-        });
+        const editor = CodeMirror.fromTextArea(
+          document.getElementById("editor"),
+          {
+            mode: "htmlmixed",
+            theme: "glitch-light",
+            lineNumbers: true,
+            lineWrapping: true,
+          }
+        );
         const files = {
           html: "<h1>Hello, CodeMirror!</h1>",
           css: "h1 { color: red; }",
@@ -229,22 +257,32 @@
         function updatePreview() {
           const output = document.getElementById("preview").contentDocument;
           output.open();
-          output.write(`<html><head><style>${files.css}</style></head><body>${files.html}<script>${files.js}<\/script></body></html>`);
+          output.write(
+            `<html><head><style>${files.css}</style></head><body>${files.html}<script>${files.js}<\/script></body></html>`
+          );
           output.close();
         }
-        document.getElementById("htmlFile").onclick = () => updateEditor("htmlmixed", files.html);
-        document.getElementById("cssFile").onclick = () => updateEditor("css", files.css);
-        document.getElementById("jsFile").onclick = () => updateEditor("javascript", files.js);
+        document.getElementById("htmlFile").onclick = () =>
+          updateEditor("htmlmixed", files.html);
+        document.getElementById("cssFile").onclick = () =>
+          updateEditor("css", files.css);
+        document.getElementById("jsFile").onclick = () =>
+          updateEditor("javascript", files.js);
         document.getElementById("openWindow").onclick = () => {
           const win = window.open("", "_blank");
-          win.document.write(`<html><head><style>${files.css}</style></head><body>${files.html}<script>${files.js}<\/script></body></html>`);
+          win.document.write(
+            `<html><head><style>${files.css}</style></head><body>${files.html}<script>${files.js}<\/script></body></html>`
+          );
         };
         document.getElementById("copyLink").onclick = () => {
-          navigator.clipboard.writeText(document.getElementById("preview-url").value).then(() => {
-            alert("Preview URL copied to clipboard!");
-          });
+          navigator.clipboard
+            .writeText(document.getElementById("preview-url").value)
+            .then(() => {
+              alert("Preview URL copied to clipboard!");
+            });
         };
-        document.getElementById("createFile").onclick = () => alert("File creation UI coming soon!");
+        document.getElementById("createFile").onclick = () =>
+          alert("File creation UI coming soon!");
         editor.on("change", () => {
           const mode = editor.getOption("mode");
           if (mode === "htmlmixed") files.html = editor.getValue();

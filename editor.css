@@ -1,4 +1,4 @@
-.CodeMirror {
+.cm-s-glitch-light .CodeMirror {
   font-family: var(--font-code);
   font-size: 15px;
   height: 100%;
@@ -9,11 +9,11 @@
   padding: 10px;
 }
 
-.CodeMirror-gutters {
+.cm-s-glitch-light .CodeMirror-gutters {
   background: var(--bg-light);
   border-right: 1px solid var(--border-color);
 }
-.CodeMirror-linenumber {
+.cm-s-glitch-light .CodeMirror-linenumber {
   color: #7f85a3;
 }
 
