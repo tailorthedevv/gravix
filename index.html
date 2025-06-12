@@ -14,95 +14,122 @@
     />
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        height: 100vh;
-        margin: 0;
-      }
-      #sidebar {
-        width: 200px;
-        background: #282a36;
-        color: white;
-        padding: 15px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      button {
-        background: #44475a;
-        border: none;
-        color: white;
-        padding: 10px;
-        cursor: pointer;
-        text-align: left;
-      }
-      button:hover {
-        background: #6272a4;
-      }
-      #editor-container {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        padding: 10px;
-        background: #f8f8f8;
-      }
-      #editor {
-        flex-grow: 1;
-        border: 1px solid #ccc;
-      }
-      #preview {
-        width: 40%;
-        border-left: 2px solid #ccc;
-        padding: 10px;
-        background: white;
-      }
-      #main {
-        display: flex;
-        flex-grow: 1;
-      }
-      /* Override CodeMirror's default styles with Glitch-inspired colors */
+:root {
+  --bg-dark: #282a36;
+  --bg-light: #f4f4f4;
+  --border-color: #3c3f58;
+  --highlight: #ff4ec8;
+  --accent: #6272a4;
+  --font-ui: 'Inter', sans-serif;
+  --font-code: 'Fira Code', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  font-family: var(--font-ui);
+  background: var(--bg-light);
+  color: #2c2f45;
+}
+
+/* Sidebar styling */
+#sidebar {
+  width: 220px;
+  background: var(--bg-dark);
+  color: white;
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-right: 2px solid var(--border-color);
+}
+
+#sidebar h3 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+}
+
+/* Sidebar buttons */
+#sidebar button {
+  background: #44475a;
+  border: none;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+  font-family: var(--font-ui);
+}
+
+#sidebar button:hover {
+  background: var(--accent);
+}
+
+/* Main area layout */
+#main {
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+}
+
+/* Editor container */
+#editor-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+}
+
+/* CodeMirror overrides */
 .CodeMirror {
-  font-family: 'Fira Code', monospace;
+  font-family: var(--font-code);
   font-size: 15px;
   height: 100%;
-  background: #f4f4f4;   /* Glitch-like dark background */
-  color: #2c2f45;         /* Default light foreground */
+  background: var(--bg-light);
+  color: #2c2f45;
   border-radius: 6px;
-  border: 1px solid #3c3f58;
+  border: 1px solid var(--border-color);
   padding: 10px;
 }
 
-/* Highlighted line number and general line numbers */
+/* Gutter styles */
 .CodeMirror-gutters {
-  background: #f4f4f4;
-  border-right: 1px solid #3c3f58;
+  background: var(--bg-light);
+  border-right: 1px solid var(--border-color);
 }
 .CodeMirror-linenumber {
   color: #7f85a3;
 }
 
-/* Keyword — bold + pink */
-.cm-keyword {
-  color: #ff4ec8;
-  font-weight: bold;
-}
-
-/* Other syntax — stay clean, not bolded */
-.cm-def       { color: #00e3d8; }
-.cm-variable  { color: #2c2f45; }
+/* Syntax highlighting */
+.cm-keyword { color: #00119e; font-weight: bold; }
+.cm-def { color: #00e3d8; }
+.cm-variable { color: #2c2f45; }
 .cm-variable-2 { color: #8be9fd; }
-.cm-property  { color: #66d9ef; }
-.cm-number    { color: #bd93f9; }
-.cm-atom      { color: #bd93f9; }
-.cm-string    { color: #f1fa8c; }
-.cm-comment   { color: #7f85a3; font-style: italic; }
-.cm-tag       { color: #ff79c6; }
+.cm-property { color: #66d9ef; }
+.cm-number, .cm-atom { color: #bd93f9; }
+.cm-string { color: #f1fa8c; }
+.cm-comment { color: #7f85a3; font-style: italic; }
+.cm-tag { color: #ff79c6; }
 .cm-attribute { color: #50fa7b; }
-.cm-builtin   { color: #fab387; }
-.cm-meta      { color: #ffb86c; }
-.cm-operator  { color: #ff79c6; }
+.cm-builtin { color: #fab387; }
+.cm-meta { color: #ffb86c; }
+.cm-operator { color: #ff79c6; }
 
+/* Preview pane */
+#preview {
+  width: 40%;
+  border-left: 2px solid #ccc;
+  padding: 10px;
+  background: white;
+  font-family: var(--font-ui);
+}
     </style>
   </head>
   <body>
