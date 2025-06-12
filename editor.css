@@ -1,6 +1,6 @@
-.cm-s-glitch-light .CodeMirror {
+.CodeMirror {
   font-family: var(--font-code);
-  font-size: 15px;
+  font-size: 12px;
   height: 100%;
   background: var(--bg-light);
   color: #2c2f45;
@@ -9,9 +9,17 @@
   padding: 10px;
 }
 
-.cm-matchhighlight {
-  background-color: rgba(255, 230, 150, 0.5));
+:root {
+  --highlight-color: rgba(137, 219, 221, .5);
 }
+
+.cm-matchhighlight,
+.CodeMirror-matchingbracket {
+  background-color: var(--highlight-color);
+    border-bottom: 0.25px solid #222;
+  transition: background-color 0.2s;
+}
+
 .cm-s-glitch-light .CodeMirror-gutters {
   background: var(--bg-light);
   border-right: 1px solid var(--border-color);
@@ -22,7 +30,7 @@
 
 .cm-s-glitch-light {
   font-family: var(--font-code);
-  font-size: 15px;
+  font-size: 13px;
   height: 100%;
   background: var(--bg-light);
   color: #2c2f45;
