@@ -4,29 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Glitch-Inspired Code Editor</title>
-
-    <!-- CodeMirror -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css"
-    />
-        <link
-      rel="stylesheet"
-      href="/editor.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css" />
+    <link rel="stylesheet" href="/editor.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/css/css.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/htmlmixed/htmlmixed.min.js"></script>
-
-    <!-- Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;700&display=swap" rel="stylesheet" />
     <style>
-      /* ======= GLOBAL THEME ======= */
       :root {
         --color-bg: #f7f7f8;
         --color-panel: #ffffff;
@@ -40,11 +25,9 @@
         --transition: all 0.2s ease;
         --btn-radius: 4px;
       }
-
       * {
         box-sizing: border-box;
       }
-
       body {
         margin: 0;
         height: 100vh;
@@ -54,8 +37,6 @@
         background: var(--color-bg);
         color: var(--color-text);
       }
-
-      /* ======= TOP NAVBAR ======= */
       #topbar {
         height: 48px;
         background: var(--color-white);
@@ -65,27 +46,22 @@
         padding: 0 16px;
         justify-content: space-between;
       }
-
       #topbar .logo {
         font-weight: bold;
         font-size: 16px;
         color: var(--color-accent);
       }
-
       #topbar input {
         padding: 6px 10px;
         border: 1px solid var(--color-border);
         border-radius: var(--btn-radius);
         font-family: var(--font-ui);
       }
-
-      /* ======= MAIN SECTION ======= */
       #main {
         flex: 1;
         display: flex;
         overflow: hidden;
       }
-
       #sidebar {
         width: 220px;
         background: var(--color-panel);
@@ -95,13 +71,11 @@
         gap: 10px;
         border-right: 1px solid var(--color-border);
       }
-
       #sidebar h3 {
         margin-bottom: 10px;
         font-size: 14px;
         color: var(--color-muted);
       }
-
       .btn {
         padding: 8px 16px;
         font-size: 12px;
@@ -114,39 +88,71 @@
         transition: var(--transition);
         letter-spacing: 0.05em;
       }
-
       .btn:hover {
         background: var(--color-accent);
         color: white;
         border-color: var(--color-accent);
       }
-
       #editor-container,
-      #preview {
+      #preview-pane {
         flex: 1;
         height: 100%;
         overflow: hidden;
-      }
-
-      #editor-container {
         display: flex;
         flex-direction: column;
+      }
+      #editor-container {
         background: var(--color-white);
         padding: 10px;
       }
-
-      #preview {
-        border-left: 1px solid var(--color-border);
-        background: var(--color-white);
-      }
-
       #resizer {
         width: 6px;
         background: var(--color-border);
         cursor: col-resize;
       }
-
-      /* ======= BOTTOM STATUSBAR ======= */
+      #preview-bar {
+        background: var(--color-panel);
+        border-bottom: 1px solid var(--color-border);
+        padding: 6px 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-family: var(--font-ui);
+      }
+      #preview-url {
+        flex: 1;
+        padding: 6px 10px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--btn-radius);
+        font-family: var(--font-code);
+        background: var(--color-white);
+      }
+      #preview {
+        flex: 1;
+        border: none;
+        background: var(--color-white);
+      }
+      .toggle {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .icon-btn {
+        font-size: 12px;
+        padding: 6px 10px;
+        font-family: var(--font-code);
+        background: var(--color-white);
+        border: 1px solid var(--color-text);
+        border-radius: var(--btn-radius);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      .icon-btn:hover {
+        background: var(--color-accent);
+        color: white;
+        border-color: var(--color-accent);
+      }
       #statusbar {
         height: 30px;
         background: var(--color-white);
@@ -158,8 +164,6 @@
         font-size: 12px;
         color: var(--color-muted);
       }
-
-      /* Responsive */
       @media (max-width: 600px) {
         #sidebar {
           display: none;
@@ -168,15 +172,11 @@
     </style>
   </head>
   <body>
-    <!-- Topbar -->
     <div id="topbar">
       <div class="logo">Glitch Editor</div>
       <input type="text" placeholder="Search files..." />
     </div>
-
-    <!-- Main Content -->
     <div id="main">
-      <!-- Sidebar -->
       <div id="sidebar">
         <h3>Files</h3>
         <button class="btn" id="htmlFile">index.html</button>
@@ -184,84 +184,54 @@
         <button class="btn" id="jsFile">script.js</button>
         <hr />
         <button class="btn" id="createFile">+ Create File</button>
-        <button class="btn" id="openWindow">↗ Open Preview</button>
+        <div class="toggle">
+          <input type="checkbox" id="autorefresh" checked />
+          <label for="autorefresh">Auto-Refresh</label>
+        </div>
+        <div class="toggle">
+          <button class="icon-btn" id="openWindow">↗ Open</button>
+          <button class="icon-btn" id="copyLink">⧉ Copy</button>
+        </div>
       </div>
-
-      <!-- Editor & Preview -->
-      <div id="editor-container">
+      <div id="editor-container" style="flex-basis: 50%;">
         <textarea id="editor"></textarea>
       </div>
       <div id="resizer"></div>
-      <iframe id="preview"></iframe>
+      <div id="preview-pane" style="flex: 1;">
+        <div id="preview-bar">
+          <input id="preview-url" readonly value="https://glitch-editor.local/preview" />
+        </div>
+        <iframe id="preview"></iframe>
+      </div>
     </div>
-
-    <!-- Bottom Status Bar -->
     <div id="statusbar">
       <div>Status: Editing</div>
       <div>Project: Untitled</div>
     </div>
-
-    <!-- Resizer Script -->
-    <script>
-      const resizer = document.getElementById("resizer");
-      const leftPanel = document.getElementById("editor-container");
-      const rightPanel = document.getElementById("preview");
-      const container = document.getElementById("main");
-      let isDragging = false;
-
-      resizer.addEventListener("mousedown", () => {
-        isDragging = true;
-        document.body.style.cursor = "col-resize";
-      });
-
-      document.addEventListener("mousemove", (e) => {
-        if (!isDragging) return;
-        const rect = container.getBoundingClientRect();
-        const offset = e.clientX - rect.left;
-        const min = 200;
-        const max = rect.width - min;
-        const newLeft = Math.max(min, Math.min(offset, max));
-        leftPanel.style.flexBasis = `${newLeft}px`;
-        rightPanel.style.flexBasis = `${rect.width - newLeft}px`;
-      });
-
-      document.addEventListener("mouseup", () => {
-        isDragging = false;
-        document.body.style.cursor = "default";
-      });
-    </script>
-
-    <!-- CodeMirror & Preview Script -->
+    <script src="/script.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
           mode: "htmlmixed",
-theme: "glitch-light", // ✅ your custom theme name
+          theme: "glitch-light",
           lineNumbers: true,
           lineWrapping: true,
         });
-
         const files = {
           html: "<h1>Hello, CodeMirror!</h1>",
           css: "h1 { color: red; }",
           js: "console.log('Hello, CodeMirror!');",
         };
-
         function updateEditor(mode, content) {
           editor.setOption("mode", mode);
           editor.setValue(content);
         }
-
         function updatePreview() {
           const output = document.getElementById("preview").contentDocument;
           output.open();
-          output.write(`
-            <html><head><style>${files.css}</style></head>
-            <body>${files.html}<script>${files.js}<\/script></body></html>
-          `);
+          output.write(`<html><head><style>${files.css}</style></head><body>${files.html}<script>${files.js}<\/script></body></html>`);
           output.close();
         }
-
         document.getElementById("htmlFile").onclick = () => updateEditor("htmlmixed", files.html);
         document.getElementById("cssFile").onclick = () => updateEditor("css", files.css);
         document.getElementById("jsFile").onclick = () => updateEditor("javascript", files.js);
@@ -269,16 +239,19 @@ theme: "glitch-light", // ✅ your custom theme name
           const win = window.open("", "_blank");
           win.document.write(`<html><head><style>${files.css}</style></head><body>${files.html}<script>${files.js}<\/script></body></html>`);
         };
+        document.getElementById("copyLink").onclick = () => {
+          navigator.clipboard.writeText(document.getElementById("preview-url").value).then(() => {
+            alert("Preview URL copied to clipboard!");
+          });
+        };
         document.getElementById("createFile").onclick = () => alert("File creation UI coming soon!");
-
         editor.on("change", () => {
           const mode = editor.getOption("mode");
           if (mode === "htmlmixed") files.html = editor.getValue();
           else if (mode === "css") files.css = editor.getValue();
           else if (mode === "javascript") files.js = editor.getValue();
-          updatePreview();
+          if (document.getElementById("autorefresh").checked) updatePreview();
         });
-
         updateEditor("htmlmixed", files.html);
         updatePreview();
       });
