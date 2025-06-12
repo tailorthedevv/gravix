@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Glitched</title>
+    <title>Gravix</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css"
@@ -23,7 +23,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/javascript-lint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/csslint/1.0.5/csslint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/css-lint.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/htmlhint@latest/dist/htmlhint.min.js"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;700&display=swap"
       rel="stylesheet"
@@ -191,7 +190,7 @@
   </head>
   <body>
     <div id="topbar">
-      <div class="logo">Glitched</div>
+      <div class="logo">Gravix</div>
       <input type="text" placeholder="Search files..." />
     </div>
     <div id="main">
@@ -247,17 +246,6 @@
     <script src="/script.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        CodeMirror.registerHelper("lint", "htmlmixed", function(text) {
-  const messages = HTMLHint.verify(text, {});
-  return messages.map(function(msg) {
-    return {
-      from: CodeMirror.Pos(msg.line - 1, msg.col - 1),
-      to: CodeMirror.Pos(msg.line - 1, msg.col),
-      message: msg.message,
-      severity: msg.type
-    };
-  });
-});
         const editor = CodeMirror.fromTextArea(
           document.getElementById("editor"),
           {
@@ -265,19 +253,53 @@
             theme: "glitch-light",
             lineNumbers: true,
             lineWrapping: true,
+            gutters: ["CodeMirror-linenumbers", "CodeMirror-lint-markers"],
             lint: true,
           }
         );
-        const files = {
-          html: "<h1>Hello, CodeMirror!</h1>",
-          css: "h1 { color: red; }",
-          js: "console.log('Hello, CodeMirror!');",
-        };
-function updateEditor(mode, content) {
-  editor.setOption("mode", mode);
-editor.setOption("lint", true);
-  editor.setValue(content);
+const files = {
+css: `body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #f9f9fb;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
+
+main {
+  text-align: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+button {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: #5c6ac4;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #4a55b5;
+}`,
+  
+  js: `document.getElementById("clickMe").addEventListener("click", () => {
+  alert("Hello from JavaScript!");
+});`
+};
+        function updateEditor(mode, content) {
+          editor.setOption("mode", mode);
+          editor.setOption("lint", mode === "javascript" || mode === "css");
+          editor.setValue(content);
+        }
         function updatePreview() {
           const blob = new Blob(
             [
