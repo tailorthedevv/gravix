@@ -3,28 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CodeMirror File-Based Editor</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/css/css.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/htmlmixed/htmlmixed.min.js"></script>
+    <title>Glitch-Inspired Code Editor</title>
+
+    <!-- CodeMirror -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css"
     />
+        <link
+      rel="stylesheet"
+      href="/editor.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/htmlmixed/htmlmixed.min.js"></script>
+
+    <!-- Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;700&display=swap"
       rel="stylesheet"
     />
+
     <style>
+      /* ======= GLOBAL THEME ======= */
       :root {
-        --bg-dark: #282a36;
-        --bg-light: #f4f4f4;
-        --border-color: #3c3f58;
-        --highlight: #ff4ec8;
-        --accent: #6272a4;
-        --font-ui: "Inter", sans-serif;
-        --font-code: "Fira Code", monospace;
+        --color-bg: #f7f7f8;
+        --color-panel: #ffffff;
+        --color-border: #ddd;
+        --color-text: #333;
+        --color-accent: #5c6ac4;
+        --color-muted: #888;
+        --color-white: #fff;
+        --font-ui: 'Inter', sans-serif;
+        --font-code: 'Fira Code', monospace;
+        --transition: all 0.2s ease;
+        --btn-radius: 4px;
       }
 
       * {
@@ -35,225 +49,199 @@
         margin: 0;
         height: 100vh;
         display: flex;
+        flex-direction: column;
         font-family: var(--font-ui);
-        background: var(--bg-light);
-        color: #2c2f45;
+        background: var(--color-bg);
+        color: var(--color-text);
+      }
+
+      /* ======= TOP NAVBAR ======= */
+      #topbar {
+        height: 48px;
+        background: var(--color-white);
+        border-bottom: 1px solid var(--color-border);
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        justify-content: space-between;
+      }
+
+      #topbar .logo {
+        font-weight: bold;
+        font-size: 16px;
+        color: var(--color-accent);
+      }
+
+      #topbar input {
+        padding: 6px 10px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--btn-radius);
+        font-family: var(--font-ui);
+      }
+
+      /* ======= MAIN SECTION ======= */
+      #main {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
       }
 
       #sidebar {
         width: 220px;
-        background: var(--bg-dark);
-        color: white;
+        background: var(--color-panel);
         padding: 20px 15px;
         display: flex;
         flex-direction: column;
-        gap: 12px;
-        border-right: 2px solid var(--border-color);
+        gap: 10px;
+        border-right: 1px solid var(--color-border);
       }
 
       #sidebar h3 {
-        margin: 0 0 10px;
-        font-size: 1.1rem;
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: var(--color-muted);
       }
 
-      #sidebar button {
-        background: #44475a;
-        border: none;
-        color: white;
-        padding: 10px;
+      .btn {
+        padding: 8px 16px;
+        font-size: 12px;
+        font-family: var(--font-code);
+        background: var(--color-white);
+        color: var(--color-text);
+        border: 2px solid var(--color-text);
+        border-radius: var(--btn-radius);
         cursor: pointer;
-        text-align: left;
-        border-radius: 6px;
-        transition: background 0.2s ease;
-        font-family: var(--font-ui);
+        transition: var(--transition);
+        letter-spacing: 0.05em;
       }
 
-      #sidebar button:hover {
-        background: var(--accent);
+      .btn:hover {
+        background: var(--color-accent);
+        color: white;
+        border-color: var(--color-accent);
       }
 
-#main {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-
-#editor-container,
-#preview {
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: 50%;
-  min-width: 250px;
-  height: 100%;
-  overflow: hidden;
-}
-
-#editor-container {
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-}
-
-#preview {
-  border: none;
-  border-left: 2px solid var(--border-color);
-  background: var(--bg-light);
-}
-
-#resizer {
-  width: 6px;
-  background: var(--border-color);
-  cursor: col-resize;
-  user-select: none;
-}
-
-      .CodeMirror {
-        font-family: var(--font-code);
-        font-size: 15px;
+      #editor-container,
+      #preview {
+        flex: 1;
         height: 100%;
-        background: var(--bg-light);
-        color: #2c2f45;
-        border-radius: 6px;
-        border: 1px solid var(--border-color);
+        overflow: hidden;
+      }
+
+      #editor-container {
+        display: flex;
+        flex-direction: column;
+        background: var(--color-white);
         padding: 10px;
       }
 
-      .CodeMirror-gutters {
-        background: var(--bg-light);
-        border-right: 1px solid var(--border-color);
-      }
-      .CodeMirror-linenumber {
-        color: #7f85a3;
+      #preview {
+        border-left: 1px solid var(--color-border);
+        background: var(--color-white);
       }
 
-      .cm-s-glitch-light {
-        font-family: var(--font-code);
-        font-size: 15px;
-        height: 100%;
-        background: var(--bg-light);
-        color: #2c2f45;
-        border-radius: 6px;
-        border: 1px solid var(--border-color);
-        padding: 10px;
+      #resizer {
+        width: 6px;
+        background: var(--color-border);
+        cursor: col-resize;
       }
 
-      .cm-s-glitch-light .CodeMirror-gutters {
-        background: var(--bg-light);
-        border-right: 1px solid var(--border-color);
+      /* ======= BOTTOM STATUSBAR ======= */
+      #statusbar {
+        height: 30px;
+        background: var(--color-white);
+        border-top: 1px solid var(--color-border);
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--color-muted);
       }
-      .cm-s-glitch-light .CodeMirror-linenumber {
-        color: #7f85a3;
-      }
-      .cm-s-glitch-light .cm-keyword {
-        color: #0820b2;
-        font-weight: bold;
-      }
-      .cm-s-glitch-light .cm-def {
-        color: #00e3d8;
-      }
-      .cm-s-glitch-light .cm-variable {
-        color: #2c2f45;
-      }
-      .cm-s-glitch-light .cm-variable-2 {
-        color: #8be9fd;
-      }
-      .cm-s-glitch-light .cm-property {
-        color: #9445b0;
-      }
-      .cm-s-glitch-light .cm-number,
-      .cm-s-glitch-light .cm-atom {
-        color: #15959c;
-      }
-      .cm-s-glitch-light .cm-string {
-        color: #a2162d;
-      }
-      .cm-s-glitch-light .cm-comment {
-        color: #898989;
-        font-style: italic;
-      }
-      .cm-s-glitch-light .cm-tag {
-        color: #0820b2;
-      }
-      .cm-s-glitch-light .cm-attribute {
-        color: #50fa7b;
-      }
-      .cm-s-glitch-light .cm-builtin {
-        color: #222;
-      }
-      .cm-s-glitch-light .cm-meta {
-        color: #ffb86c;
-      }
-      .cm-s-glitch-light .cm-operator {
-        color: #0820b2;
+
+      /* Responsive */
+      @media (max-width: 600px) {
+        #sidebar {
+          display: none;
+        }
       }
     </style>
   </head>
   <body>
-    <div id="sidebar">
-      <h3>Files</h3>
-      <button id="htmlFile">index.html</button>
-      <button id="cssFile">style.css</button>
-      <button id="jsFile">script.js</button>
+    <!-- Topbar -->
+    <div id="topbar">
+      <div class="logo">Glitch Editor</div>
+      <input type="text" placeholder="Search files..." />
     </div>
 
-<div id="main">
-  <div id="editor-container">
-    <textarea id="editor"></textarea>
-  </div>
-  <div id="resizer"></div>
-  <iframe id="preview"></iframe>
-</div>
-    
-<script>
-  const resizer = document.getElementById('resizer');
-  const leftPanel = document.getElementById('editor-container');
-  const rightPanel = document.getElementById('preview');
-  const container = document.getElementById('main');
+    <!-- Main Content -->
+    <div id="main">
+      <!-- Sidebar -->
+      <div id="sidebar">
+        <h3>Files</h3>
+        <button class="btn" id="htmlFile">index.html</button>
+        <button class="btn" id="cssFile">style.css</button>
+        <button class="btn" id="jsFile">script.js</button>
+        <hr />
+        <button class="btn" id="createFile">+ Create File</button>
+        <button class="btn" id="openWindow">↗ Open Preview</button>
+      </div>
 
-  let isDragging = false;
+      <!-- Editor & Preview -->
+      <div id="editor-container">
+        <textarea id="editor"></textarea>
+      </div>
+      <div id="resizer"></div>
+      <iframe id="preview"></iframe>
+    </div>
 
-  resizer.addEventListener('mousedown', function () {
-    isDragging = true;
-    document.body.style.cursor = 'col-resize';
-  });
+    <!-- Bottom Status Bar -->
+    <div id="statusbar">
+      <div>Status: Editing</div>
+      <div>Project: Untitled</div>
+    </div>
 
-  document.addEventListener('mousemove', function (e) {
-    if (!isDragging) return;
-
-    const containerRect = container.getBoundingClientRect();
-    const offset = e.clientX - containerRect.left;
-    const minWidth = 250;
-    const maxWidth = containerRect.width - minWidth;
-
-    // Clamp the offset
-    const newLeftWidth = Math.max(minWidth, Math.min(offset, maxWidth));
-    const newRightWidth = containerRect.width - newLeftWidth - resizer.offsetWidth;
-
-    leftPanel.style.flexBasis = `${newLeftWidth}px`;
-    rightPanel.style.flexBasis = `${newRightWidth}px`;
-  });
-
-  document.addEventListener('mouseup', function () {
-    isDragging = false;
-    document.body.style.cursor = 'default';
-  });
-</script>
-
+    <!-- Resizer Script -->
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        let editor = CodeMirror.fromTextArea(
-          document.getElementById("editor"),
-          {
-            mode: "htmlmixed",
-            theme: "glitch-light", // refer to your custom class name
-            lineNumbers: true,
-          }
-        );
+      const resizer = document.getElementById("resizer");
+      const leftPanel = document.getElementById("editor-container");
+      const rightPanel = document.getElementById("preview");
+      const container = document.getElementById("main");
+      let isDragging = false;
 
-        editor.getWrapperElement().classList.add("cm-s-glitch-light");
+      resizer.addEventListener("mousedown", () => {
+        isDragging = true;
+        document.body.style.cursor = "col-resize";
+      });
 
-        let files = {
+      document.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        const rect = container.getBoundingClientRect();
+        const offset = e.clientX - rect.left;
+        const min = 200;
+        const max = rect.width - min;
+        const newLeft = Math.max(min, Math.min(offset, max));
+        leftPanel.style.flexBasis = `${newLeft}px`;
+        rightPanel.style.flexBasis = `${rect.width - newLeft}px`;
+      });
+
+      document.addEventListener("mouseup", () => {
+        isDragging = false;
+        document.body.style.cursor = "default";
+      });
+    </script>
+
+    <!-- CodeMirror & Preview Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+          mode: "htmlmixed",
+theme: "glitch-light", // ✅ your custom theme name
+          lineNumbers: true,
+          lineWrapping: true,
+        });
+
+        const files = {
           html: "<h1>Hello, CodeMirror!</h1>",
           css: "h1 { color: red; }",
           js: "console.log('Hello, CodeMirror!');",
@@ -265,43 +253,29 @@
         }
 
         function updatePreview() {
-          let output = document.getElementById("preview").contentDocument;
-
+          const output = document.getElementById("preview").contentDocument;
           output.open();
           output.write(`
-        ${files.html}
-        <style>${files.css}</style>
-    `);
+            <html><head><style>${files.css}</style></head>
+            <body>${files.html}<script>${files.js}<\/script></body></html>
+          `);
           output.close();
-
-          let scriptElement = output.createElement("script");
-          scriptElement.textContent = files.js;
-          output.body.appendChild(scriptElement);
         }
 
-        document
-          .getElementById("htmlFile")
-          .addEventListener("click", function () {
-            updateEditor("htmlmixed", files.html);
-          });
+        document.getElementById("htmlFile").onclick = () => updateEditor("htmlmixed", files.html);
+        document.getElementById("cssFile").onclick = () => updateEditor("css", files.css);
+        document.getElementById("jsFile").onclick = () => updateEditor("javascript", files.js);
+        document.getElementById("openWindow").onclick = () => {
+          const win = window.open("", "_blank");
+          win.document.write(`<html><head><style>${files.css}</style></head><body>${files.html}<script>${files.js}<\/script></body></html>`);
+        };
+        document.getElementById("createFile").onclick = () => alert("File creation UI coming soon!");
 
-        document
-          .getElementById("cssFile")
-          .addEventListener("click", function () {
-            updateEditor("css", files.css);
-          });
-
-        document
-          .getElementById("jsFile")
-          .addEventListener("click", function () {
-            updateEditor("javascript", files.js);
-          });
-
-        editor.on("change", function () {
-          let mode = editor.getOption("mode");
+        editor.on("change", () => {
+          const mode = editor.getOption("mode");
           if (mode === "htmlmixed") files.html = editor.getValue();
-          if (mode === "css") files.css = editor.getValue();
-          if (mode === "javascript") files.js = editor.getValue();
+          else if (mode === "css") files.css = editor.getValue();
+          else if (mode === "javascript") files.js = editor.getValue();
           updatePreview();
         });
 

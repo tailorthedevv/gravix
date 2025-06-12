@@ -1,0 +1,79 @@
+.CodeMirror {
+  font-family: var(--font-code);
+  font-size: 15px;
+  height: 100%;
+  background: var(--bg-light);
+  color: #2c2f45;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  padding: 10px;
+}
+
+.CodeMirror-gutters {
+  background: var(--bg-light);
+  border-right: 1px solid var(--border-color);
+}
+.CodeMirror-linenumber {
+  color: #7f85a3;
+}
+
+.cm-s-glitch-light {
+  font-family: var(--font-code);
+  font-size: 15px;
+  height: 100%;
+  background: var(--bg-light);
+  color: #2c2f45;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  padding: 10px;
+}
+
+.cm-s-glitch-light .CodeMirror-gutters {
+  background: var(--bg-light);
+  border-right: 1px solid var(--border-color);
+}
+.cm-s-glitch-light .CodeMirror-linenumber {
+  color: #7f85a3;
+}
+.cm-s-glitch-light .cm-keyword {
+  color: #0820b2;
+  font-weight: bold;
+}
+.cm-s-glitch-light .cm-def {
+  color: #222;
+}
+.cm-s-glitch-light .cm-variable {
+  color: #2c2f45;
+}
+.cm-s-glitch-light .cm-variable-2 {
+  color: #8be9fd;
+}
+.cm-s-glitch-light .cm-property {
+  color: #9445b0;
+}
+.cm-s-glitch-light .cm-number,
+.cm-s-glitch-light .cm-atom {
+  color: #15959c;
+}
+.cm-s-glitch-light .cm-string {
+  color: #a2162d;
+}
+.cm-s-glitch-light .cm-comment {
+  color: #898989;
+  font-style: italic;
+}
+.cm-s-glitch-light .cm-tag {
+  color: #0820b2;
+}
+.cm-s-glitch-light .cm-attribute {
+  color: #50fa7b;
+}
+.cm-s-glitch-light .cm-builtin {
+  color: #222;
+}
+.cm-s-glitch-light .cm-meta {
+  color: #ffb86c;
+}
+.cm-s-glitch-light .cm-operator {
+  color: #0820b2;
+}
