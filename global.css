@@ -63,6 +63,13 @@ body {
   font-size: 14px;
   color: var(--color-muted);
 }
+#file-buttons {
+  background: var(--color-panel);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-right: 1px solid var(--color-border);
+}
 .btn {
   padding: 8px 16px;
   font-size: 12px;

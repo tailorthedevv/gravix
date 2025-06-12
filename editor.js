@@ -1,4 +1,3 @@
-<script>
 document.addEventListener("DOMContentLoaded", async () => {
   const e = CodeMirror.fromTextArea(document.getElementById("editor"), {
     mode: "htmlmixed", theme: "glitch-light", lineNumbers: true, lineWrapping: true,
@@ -12,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const renderFileButtons = () => {
     const fileSection = document.getElementById("file-buttons");
-    fileSection.innerHTML = ""; // Clear existing buttons
+    fileSection.innerHTML = "";
 
     Object.keys(d).forEach(name => {
       const btn = document.createElement("button");
@@ -23,7 +22,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   };
 
-  // Fetch files from /files/
   async function fetchFile(name) {
     try {
       const res = await fetch(`/files/${name}`);
@@ -100,8 +98,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       renderFileButtons();
     }
   };
+  
 
   s("index.html");
   p();
 });
-</script>
