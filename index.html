@@ -1,134 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CodeMirror File-Based Editor</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/css/css.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/htmlmixed/htmlmixed.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css"
+    />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            height: 100vh;
-            margin: 0;
-        }
-        #sidebar {
-            width: 200px;
-            background: #282a36;
-            color: white;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        button {
-            background: #44475a;
-            border: none;
-            color: white;
-            padding: 10px;
-            cursor: pointer;
-            text-align: left;
-        }
-        button:hover {
-            background: #6272a4;
-        }
-        #editor-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-            background: #f8f8f8;
-        }
-        #editor {
-            flex-grow: 1;
-            border: 1px solid #ccc;
-        }
-        #preview {
-            width: 40%;
-            border-left: 2px solid #ccc;
-            padding: 10px;
-            background: white;
-        }
-        #main {
-            display: flex;
-            flex-grow: 1;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        height: 100vh;
+        margin: 0;
+      }
+      #sidebar {
+        width: 200px;
+        background: #282a36;
+        color: white;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      button {
+        background: #44475a;
+        border: none;
+        color: white;
+        padding: 10px;
+        cursor: pointer;
+        text-align: left;
+      }
+      button:hover {
+        background: #6272a4;
+      }
+      #editor-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        background: #f8f8f8;
+      }
+      #editor {
+        flex-grow: 1;
+        border: 1px solid #ccc;
+      }
+      #preview {
+        width: 40%;
+        border-left: 2px solid #ccc;
+        padding: 10px;
+        background: white;
+      }
+      #main {
+        display: flex;
+        flex-grow: 1;
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div id="sidebar">
-        <h3>Files</h3>
-        <button id="htmlFile">index.html</button>
-        <button id="cssFile">style.css</button>
-        <button id="jsFile">script.js</button>
+      <h3>Files</h3>
+      <button id="htmlFile">index.html</button>
+      <button id="cssFile">style.css</button>
+      <button id="jsFile">script.js</button>
     </div>
 
     <div id="main">
-        <div id="editor-container">
-            <textarea id="editor"></textarea>
-        </div>
-        <iframe id="preview"></iframe>
+      <div id="editor-container">
+        <textarea id="editor"></textarea>
+      </div>
+      <iframe id="preview"></iframe>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
-                mode: "htmlmixed",
-                theme: "default",
-                lineNumbers: true
-            });
+      document.addEventListener("DOMContentLoaded", function () {
+        let editor = CodeMirror.fromTextArea(
+          document.getElementById("editor"),
+          {
+            mode: "htmlmixed",
+            theme: "default",
+            lineNumbers: true,
+          }
+        );
 
-            let files = {
-                "html": "<h1>Hello, CodeMirror!</h1>",
-                "css": "h1 { color: red; }",
-                "js": "console.log('Hello, CodeMirror!');"
-            };
+        let files = {
+          html: "<h1>Hello, CodeMirror!</h1>",
+          css: "h1 { color: red; }",
+          js: "console.log('Hello, CodeMirror!');",
+        };
 
-            function updateEditor(mode, content) {
-                editor.setOption("mode", mode);
-                editor.setValue(content);
-            }
+        function updateEditor(mode, content) {
+          editor.setOption("mode", mode);
+          editor.setValue(content);
+        }
 
-            function updatePreview() {
-                let html = files.html;
-                let css = `<style>${files.css}</style>`;
-                let js = `<script>${files.js}/script>`
-                let output = document.getElementById("preview").contentDocument;
+        function updatePreview() {
+          let output = document.getElementById("preview").contentDocument;
 
-                output.open();
-                output.write(html + css + js);
-                output.close();
-            }
+          output.open();
+          output.write(`
+        ${files.html}
+        <style>${files.css}</style>
+    `);
+          output.close();
 
-            document.getElementById("htmlFile").addEventListener("click", function () {
-                updateEditor("htmlmixed", files.html);
-            });
+          let scriptElement = output.createElement("script");
+          scriptElement.textContent = files.js;
+          output.body.appendChild(scriptElement);
+        }
 
-            document.getElementById("cssFile").addEventListener("click", function () {
-                updateEditor("css", files.css);
-            });
-
-            document.getElementById("jsFile").addEventListener("click", function () {
-                updateEditor("javascript", files.js);
-            });
-
-            editor.on("change", function () {
-                let mode = editor.getOption("mode");
-                if (mode === "htmlmixed") files.html = editor.getValue();
-                if (mode === "css") files.css = editor.getValue();
-                if (mode === "javascript") files.js = editor.getValue();
-                updatePreview();
-            });
-
+        document
+          .getElementById("htmlFile")
+          .addEventListener("click", function () {
             updateEditor("htmlmixed", files.html);
-            updatePreview();
-        });
-    </script>
+          });
 
-</body>
+        document
+          .getElementById("cssFile")
+          .addEventListener("click", function () {
+            updateEditor("css", files.css);
+          });
+
+        document
+          .getElementById("jsFile")
+          .addEventListener("click", function () {
+            updateEditor("javascript", files.js);
+          });
+
+        editor.on("change", function () {
+          let mode = editor.getOption("mode");
+          if (mode === "htmlmixed") files.html = editor.getValue();
+          if (mode === "css") files.css = editor.getValue();
+          if (mode === "javascript") files.js = editor.getValue();
+          updatePreview();
+        });
+
+        updateEditor("htmlmixed", files.html);
+        updatePreview();
+      });
+    </script>
+  </body>
 </html>
