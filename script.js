@@ -11,7 +11,7 @@ resizer.addEventListener("mousedown", (e) => {
   isDragging = true;
   startX = e.clientX;
   startWidth = leftPanel.getBoundingClientRect().width;
-  
+
   document.body.style.cursor = "col-resize";
   document.body.style.userSelect = "none";
   iframeOverlay.style.display = "block";
@@ -22,17 +22,14 @@ window.addEventListener("mousemove", (e) => {
 
   const containerRect = container.getBoundingClientRect();
 
-  // Calculate how far the mouse has moved since the start of dragging
   const deltaX = e.clientX - startX;
   let newWidth = startWidth + deltaX;
-
-  // Clamp width to min and max
-  const minWidth = 150;
+  const minWidth = 200;
   const maxWidth = containerRect.width - 150;
   newWidth = Math.max(minWidth, Math.min(newWidth, maxWidth));
 
   leftPanel.style.width = `${newWidth}px`;
-  leftPanel.style.flex = "none";  // Disable flex-grow to respect width
+  leftPanel.style.flex = "none";
 });
 
 window.addEventListener("mouseup", () => {

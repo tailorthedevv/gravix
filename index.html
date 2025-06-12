@@ -30,6 +30,7 @@
       href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <script src="/editor.js" defer></script>
   </head>
   <body>
     <div id="topbar">
@@ -37,39 +38,34 @@
       <input type="text" placeholder="Search files..." />
     </div>
     <div id="main">
-      <div id="sidebar">
-        <h3>Files</h3>
-        <button class="btn" id="htmlFile">index.html</button>
-        <button class="btn" id="cssFile">style.css</button>
-        <button class="btn" id="jsFile">script.js</button>
-        <h3>Project</h3>
-        <button class="btn" id="createFile">+ Create File</button>
-        <div class="toggle">
-          <input type="checkbox" id="autorefresh" checked />
-          <label for="autorefresh">Auto-Refresh</label>
-        </div>
-        <div class="toggle">
-          <button class="icon-btn" id="openWindow">↗ Open</button>
-          <button class="icon-btn" id="copyLink">⧉ Copy</button>
-        </div>
-      </div>
-<div id="editor-container" style="flex-basis: 50%">
-<div id="filename-bar" class="bar">
-  <input id="filename-display" readonly value="index.html" />
-  <div class="file-actions">
-    <button title="Rename" id="renameFile" class="icon gray">
-      ✏️
-    </button>
-    <button title="Duplicate" id="duplicateFile" class="icon gray">
-      📄
-    </button>
-    <button title="Delete" id="deleteFile" class="icon red">
-      🗑️
-    </button>
+<div id="sidebar">
+  <h3>Files</h3>
+  <div id="file-buttons"></div> <!-- Dynamic content here -->
+  <h3>Project</h3>
+  <button class="btn" id="createFile">+ Create File</button>
+  <div class="toggle">
+    <input type="checkbox" id="autorefresh" checked />
+    <label for="autorefresh">Auto-Refresh</label>
+  </div>
+  <div class="toggle">
+    <button class="icon-btn" id="openWindow">↗ Open</button>
+    <button class="icon-btn" id="copyLink">⧉ Copy</button>
   </div>
 </div>
-  <textarea id="editor"></textarea>
-</div>
+
+      <div id="editor-container" style="flex-basis: 50%">
+        <div id="filename-bar" class="bar">
+          <input id="filename-display" readonly value="index.html" />
+          <div class="file-actions">
+            <button title="Rename" id="renameFile" class="icon gray">✏️</button>
+            <button title="Duplicate" id="duplicateFile" class="icon gray">
+              📄
+            </button>
+            <button title="Delete" id="deleteFile" class="icon red">🗑️</button>
+          </div>
+        </div>
+        <textarea id="editor"></textarea>
+      </div>
       <div id="resizer"></div>
       <div id="preview-pane" style="flex: 1">
         <div
@@ -101,25 +97,5 @@
       <div>Project: Untitled</div>
     </div>
     <script src="/script.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const editor = CodeMirror.fromTextArea(
-          document.getElementById("editor"),
-          {
-            mode: "htmlmixed",
-            theme: "glitch-light",
-            lineNumbers: true,
-            lineWrapping: true,
-            gutters: ["CodeMirror-linenumbers", "CodeMirror-lint-markers"],
-            lint: true,
-            matchBrackets: true,
-            highlightSelectionMatches: {
-              showToken: /\w/,
-              annotateScrollbar: true,
-            },
-          }
-        );
-      });
-    </script>
   </body>
 </html>
