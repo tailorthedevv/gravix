@@ -53,9 +53,23 @@
           <button class="icon-btn" id="copyLink">⧉ Copy</button>
         </div>
       </div>
-      <div id="editor-container" style="flex-basis: 50%">
-        <textarea id="editor"></textarea>
-      </div>
+<div id="editor-container" style="flex-basis: 50%">
+<div id="filename-bar" class="bar">
+  <input id="filename-display" readonly value="index.html" />
+  <div class="file-actions">
+    <button title="Rename" id="renameFile" class="icon gray">
+      ✏️
+    </button>
+    <button title="Duplicate" id="duplicateFile" class="icon gray">
+      📄
+    </button>
+    <button title="Delete" id="deleteFile" class="icon red">
+      🗑️
+    </button>
+  </div>
+</div>
+  <textarea id="editor"></textarea>
+</div>
       <div id="resizer"></div>
       <div id="preview-pane" style="flex: 1">
         <div
@@ -193,12 +207,17 @@ button:hover {
           iframe.src = url;
           iframe.onload = () => URL.revokeObjectURL(url);
         }
-        document.getElementById("htmlFile").onclick = () =>
-          updateEditor("htmlmixed", files.html);
-        document.getElementById("cssFile").onclick = () =>
-          updateEditor("css", files.css);
-        document.getElementById("jsFile").onclick = () =>
-          updateEditor("javascript", files.js);
+function setEditorFile(name, mode, content) {
+  updateEditor(mode, content);
+  document.getElementById("filename-display").value = name;
+}
+
+document.getElementById("htmlFile").onclick = () =>
+  setEditorFile("index.html", "htmlmixed", files.html);
+document.getElementById("cssFile").onclick = () =>
+  setEditorFile("style.css", "css", files.css);
+document.getElementById("jsFile").onclick = () =>
+  setEditorFile("script.js", "javascript", files.js);
         document.getElementById("openWindow").onclick = () => {
           const win = window.open("", "_blank");
           win.document.write(
@@ -223,6 +242,7 @@ button:hover {
         });
         updateEditor("htmlmixed", files.html);
         updatePreview();
+        setEditorFile("index.html", "htmlmixed", files.html);
       });
     </script>
   </body>
