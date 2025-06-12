@@ -197,6 +197,72 @@ body {
   color: white;
   border-color: var(--color-accent);
 }
+#notification-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notification {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-panel);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  border-left: 6px solid var(--color-accent);
+  border-radius: var(--btn-radius);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  min-width: 250px;
+  max-width: 300px;
+  padding: 12px 14px;
+  transform: translateX(-150%);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.notification.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.notification-header {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.notification-message {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.notification-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 14px;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.notification-close:hover {
+  color: var(--color-text);
+}
+
+.notification-wrapper {
+  position: relative;
+}
+
+/* Urgency styles */
+.notification.low { border-left-color: #5c6ac4; }       /* Accent */
+.notification.medium { border-left-color: #f0ad4e; }    /* Orange */
+.notification.high { border-left-color: crimson; }      /* Red */
+
 #statusbar {
   height: 30px;
   background: var(--color-white);

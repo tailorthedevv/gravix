@@ -53,12 +53,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   document.getElementById("copyLink").onclick = () => {
-    navigator.clipboard.writeText(document.getElementById("preview-url").value).then(() => alert("URL copied!"));
+    navigator.clipboard.writeText(document.getElementById("preview-url").value).then(() => showNotification("Success", "Url copied!", "low"));
   };
 
   document.getElementById("createFile").onclick = () => {
     const name = prompt("File name (e.g., new.html):")?.trim();
-    if (!name || d[name]) return alert("Invalid or duplicate file name.");
+    if (!name || d[name]) return showNotification("Error", "Invalid or duplicate file name!", "high");
     d[name] = "";
     f = name;
     renderFileButtons();
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   document.getElementById("renameFile").onclick = () => {
     const n = prompt("Rename to:", f)?.trim();
-    if (!n || n === f || d[n]) return alert("Invalid or duplicate.");
+    if (!n || n === f || d[n]) return showNotification("Error", "Invalid or duplicate file name!", "high");
     d[n] = d[f]; delete d[f]; f = n;
     renderFileButtons();
     v.value = n;
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let b = f.replace(/(\.\w+)$/, ""), x = f.match(/\.\w+$/)?.[0] || "", i = 1, n = `${b}-copy${x}`;
     while (d[n]) n = `${b}-copy${++i}${x}`;
     d[n] = d[f];
-    alert(`Duplicated: ${n}`);
+    showNotification("Success", `Duplicated: ${n}`, "low");
     renderFileButtons();
   };
 
@@ -94,11 +94,45 @@ document.addEventListener("DOMContentLoaded", async () => {
       f = null;
       e.setValue("");
       v.value = "";
-      alert("Deleted.");
+      showNotification("Success", `Deleted`, "low");
       renderFileButtons();
     }
   };
   
+  function showNotification(title, message, urgency = "low", duration = 4000) {
+  const container = document.getElementById("notification-container");
+
+  const wrapper = document.createElement("div");
+  wrapper.className = `notification-wrapper`;
+
+  const notif = document.createElement("div");
+  notif.className = `notification ${urgency}`;
+
+  notif.innerHTML = `
+    <div class="notification-header">${title}</div>
+    <div class="notification-message">${message}</div>
+    <div class="notification-close">&times;</div>
+  `;
+
+  wrapper.appendChild(notif);
+  container.appendChild(wrapper);
+
+  // Slide in
+  requestAnimationFrame(() => notif.classList.add("show"));
+
+  // Close manually
+  notif.querySelector(".notification-close").onclick = () => close();
+
+  // Auto-close
+  const timeout = setTimeout(() => close(), duration);
+
+  function close() {
+    clearTimeout(timeout);
+    notif.classList.remove("show");
+    setTimeout(() => wrapper.remove(), 300); // match transition
+  }
+}
+  showNotification("Welcome", "Explore the gravix editor!", "low");
 
   s("index.html");
   p();
