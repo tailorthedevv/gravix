@@ -23,6 +23,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/javascript-lint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/csslint/1.0.5/csslint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/css-lint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/search/match-highlighter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/matchbrackets.min.js"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;700&display=swap"
       rel="stylesheet"
@@ -255,10 +257,21 @@
             lineWrapping: true,
             gutters: ["CodeMirror-linenumbers", "CodeMirror-lint-markers"],
             lint: true,
+              highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
+            matchBrackets: true,
           }
         );
-const files = {
-css: `body {
+        const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+  mode: "htmlmixed",
+  theme: "glitch-light",
+  lineNumbers: true,
+  lineWrapping: true,
+  matchBrackets: true,
+  highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true }
+});
+
+        const files = {
+          css: `body {
   margin: 0;
   font-family: system-ui, sans-serif;
   background: #f9f9fb;
@@ -290,11 +303,30 @@ button {
 button:hover {
   background: #4a55b5;
 }`,
-  
-  js: `document.getElementById("clickMe").addEventListener("click", () => {
+
+          js: `document.getElementById("clickMe").addEventListener("click", () => {
   alert("Hello from JavaScript!");
-});`
-};
+});`,
+        };
+
+        files.html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hello Glitch</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <h1>Hello, Glitch!</h1>
+    <p>This is a simple Glitch-style starter project.</p>
+    <button id="clickMe">Click Me</button>
+  </main>
+  <script src="script.js"><\/script>
+</body>
+</html>`;
+
         function updateEditor(mode, content) {
           editor.setOption("mode", mode);
           editor.setOption("lint", mode === "javascript" || mode === "css");

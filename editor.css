@@ -9,6 +9,9 @@
   padding: 10px;
 }
 
+.cm-matchhighlight {
+  background-color: rgba(255, 230, 150, 0.5));
+}
 .cm-s-glitch-light .CodeMirror-gutters {
   background: var(--bg-light);
   border-right: 1px solid var(--border-color);
@@ -83,13 +86,13 @@
     font-weight: bold;
 }
 .cm-s-glitch-light .cm-attribute {
-  color: #50fa7b;
+  color: #222;
 }
 .cm-s-glitch-light .cm-builtin {
   color: #222;
 }
 .cm-s-glitch-light .cm-meta {
-  color: #ffb86c;
+  color: #666;
 }
 .cm-s-glitch-light .cm-operator {
   color: #0820b2;
