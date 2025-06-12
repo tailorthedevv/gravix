@@ -28,6 +28,14 @@
   padding: 10px;
 }
 
+.CodeMirror-lint-marker-error {
+  background: red;
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: 4px;
+}
+
 .cm-s-glitch-light .CodeMirror-gutters {
   background: var(--bg-light);
   border-right: 1px solid var(--border-color);
@@ -64,6 +72,7 @@
 }
 .cm-s-glitch-light .cm-tag {
   color: #0820b2;
+    font-weight: bold;
 }
 .cm-s-glitch-light .cm-attribute {
   color: #50fa7b;
@@ -76,4 +85,5 @@
 }
 .cm-s-glitch-light .cm-operator {
   color: #0820b2;
+    font-weight: bold;
 }
