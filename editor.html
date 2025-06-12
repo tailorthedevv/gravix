@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeMirror File-Based Editor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/htmlmixed/htmlmixed.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-dark: #282a36;
+        --bg-light: #f4f4f4;
+        --border-color: #3c3f58;
+        --highlight: #ff4ec8;
+        --accent: #6272a4;
+        --font-ui: "Inter", sans-serif;
+        --font-code: "Fira Code", monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        font-family: var(--font-ui);
+        background: var(--bg-light);
+        color: #2c2f45;
+      }
+
+      #sidebar {
+        width: 220px;
+        background: var(--bg-dark);
+        color: white;
+        padding: 20px 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        border-right: 2px solid var(--border-color);
+      }
+
+      #sidebar h3 {
+        margin: 0 0 10px;
+        font-size: 1.1rem;
+      }
+
+      #sidebar button {
+        background: #44475a;
+        border: none;
+        color: white;
+        padding: 10px;
+        cursor: pointer;
+        text-align: left;
+        border-radius: 6px;
+        transition: background 0.2s ease;
+        font-family: var(--font-ui);
+      }
+
+      #sidebar button:hover {
+        background: var(--accent);
+      }
+
+      #main {
+        display: flex;
+        flex-grow: 1;
+        height: 100%;
+      }
+
+      #editor-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+      }
+
+      .CodeMirror {
+        font-family: var(--font-code);
+        font-size: 15px;
+        height: 100%;
+        background: var(--bg-light);
+        color: #2c2f45;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        padding: 10px;
+      }
+
+      .CodeMirror-gutters {
+        background: var(--bg-light);
+        border-right: 1px solid var(--border-color);
+      }
+      .CodeMirror-linenumber {
+        color: #7f85a3;
+      }
+
+      .cm-s-glitch-light {
+        font-family: var(--font-code);
+        font-size: 15px;
+        height: 100%;
+        background: var(--bg-light);
+        color: #2c2f45;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        padding: 10px;
+      }
+
+      .cm-s-glitch-light .CodeMirror-gutters {
+        background: var(--bg-light);
+        border-right: 1px solid var(--border-color);
+      }
+      .cm-s-glitch-light .CodeMirror-linenumber {
+        color: #7f85a3;
+      }
+      .cm-s-glitch-light .cm-keyword {
+        color: #0820b2;
+        font-weight: bold;
+      }
+      .cm-s-glitch-light .cm-def {
+        color: #00e3d8;
+      }
+      .cm-s-glitch-light .cm-variable {
+        color: #2c2f45;
+      }
+      .cm-s-glitch-light .cm-variable-2 {
+        color: #8be9fd;
+      }
+      .cm-s-glitch-light .cm-property {
+        color: #9445b0;
+      }
+      .cm-s-glitch-light .cm-number,
+      .cm-s-glitch-light .cm-atom {
+        color: #15959c;
+      }
+      .cm-s-glitch-light .cm-string {
+        color: #a2162d;
+      }
+      .cm-s-glitch-light .cm-comment {
+        color: #898989;
+        font-style: italic;
+      }
+      .cm-s-glitch-light .cm-tag {
+        color: #0820b2;
+      }
+      .cm-s-glitch-light .cm-attribute {
+        color: #50fa7b;
+      }
+      .cm-s-glitch-light .cm-builtin {
+        color: #222;
+      }
+      .cm-s-glitch-light .cm-meta {
+        color: #ffb86c;
+      }
+      .cm-s-glitch-light .cm-operator {
+        color: #0820b2;
+      }
+
+      #preview {
+        width: 40%;
+        border-left: 2px solid #ccc;
+        padding: 10px;
+        background: white;
+        font-family: var(--font-ui);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sidebar">
+      <h3>Files</h3>
+      <button id="htmlFile">index.html</button>
+      <button id="cssFile">style.css</button>
+      <button id="jsFile">script.js</button>
+    </div>
+
+    <div id="main">
+      <div id="editor-container">
+        <textarea id="editor"></textarea>
+      </div>
+      <iframe id="preview"></iframe>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let editor = CodeMirror.fromTextArea(
+          document.getElementById("editor"),
+          {
+            mode: "htmlmixed",
+            theme: "glitch-light", // refer to your custom class name
+            lineNumbers: true,
+          }
+        );
+
+        editor.getWrapperElement().classList.add("cm-s-glitch-light");
+
+        let files = {
+          html: "<h1>Hello, CodeMirror!</h1>",
+          css: "h1 { color: red; }",
+          js: "console.log('Hello, CodeMirror!');",
+        };
+
+        function updateEditor(mode, content) {
+          editor.setOption("mode", mode);
+          editor.setValue(content);
+        }
+
+        function updatePreview() {
+          let output = document.getElementById("preview").contentDocument;
+
+          output.open();
+          output.write(`
+        ${files.html}
+        <style>${files.css}</style>
+    `);
+          output.close();
+
+          let scriptElement = output.createElement("script");
+          scriptElement.textContent = files.js;
+          output.body.appendChild(scriptElement);
+        }
+
+        document
+          .getElementById("htmlFile")
+          .addEventListener("click", function () {
+            updateEditor("htmlmixed", files.html);
+          });
+
+        document
+          .getElementById("cssFile")
+          .addEventListener("click", function () {
+            updateEditor("css", files.css);
+          });
+
+        document
+          .getElementById("jsFile")
+          .addEventListener("click", function () {
+            updateEditor("javascript", files.js);
+          });
+
+        editor.on("change", function () {
+          let mode = editor.getOption("mode");
+          if (mode === "htmlmixed") files.html = editor.getValue();
+          if (mode === "css") files.css = editor.getValue();
+          if (mode === "javascript") files.js = editor.getValue();
+          updatePreview();
+        });
+
+        updateEditor("htmlmixed", files.html);
+        updatePreview();
+      });
+    </script>
+  </body>
+</html>

@@ -1,218 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CodeMirror File-Based Editor</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/css/css.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/htmlmixed/htmlmixed.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css"
-    />
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-:root {
-  --bg-dark: #282a36;
-  --bg-light: #f4f4f4;
-  --border-color: #3c3f58;
-  --highlight: #ff4ec8;
-  --accent: #6272a4;
-  --font-ui: 'Inter', sans-serif;
-  --font-code: 'Fira Code', monospace;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  font-family: var(--font-ui);
-  background: var(--bg-light);
-  color: #2c2f45;
-}
-
-/* Sidebar styling */
-#sidebar {
-  width: 220px;
-  background: var(--bg-dark);
-  color: white;
-  padding: 20px 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  border-right: 2px solid var(--border-color);
-}
-
-#sidebar h3 {
-  margin: 0 0 10px;
-  font-size: 1.1rem;
-}
-
-/* Sidebar buttons */
-#sidebar button {
-  background: #44475a;
-  border: none;
-  color: white;
-  padding: 10px;
-  cursor: pointer;
-  text-align: left;
-  border-radius: 6px;
-  transition: background 0.2s ease;
-  font-family: var(--font-ui);
-}
-
-#sidebar button:hover {
-  background: var(--accent);
-}
-
-/* Main area layout */
-#main {
-  display: flex;
-  flex-grow: 1;
-  height: 100%;
-}
-
-/* Editor container */
-#editor-container {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-}
-
-/* CodeMirror overrides */
-.CodeMirror {
-  font-family: var(--font-code);
-  font-size: 15px;
-  height: 100%;
-  background: var(--bg-light);
-  color: #2c2f45;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  padding: 10px;
-}
-
-/* Gutter styles */
-.CodeMirror-gutters {
-  background: var(--bg-light);
-  border-right: 1px solid var(--border-color);
-}
-.CodeMirror-linenumber {
-  color: #7f85a3;
-}
-
-/* Syntax highlighting */
-.cm-keyword { color: #00119e; font-weight: bold; }
-.cm-def { color: #00e3d8; }
-.cm-variable { color: #2c2f45; }
-.cm-variable-2 { color: #8be9fd; }
-.cm-property { color: #66d9ef; }
-.cm-number, .cm-atom { color: #bd93f9; }
-.cm-string { color: #f1fa8c; }
-.cm-comment { color: #7f85a3; font-style: italic; }
-.cm-tag { color: #ff79c6; }
-.cm-attribute { color: #50fa7b; }
-.cm-builtin { color: #fab387; }
-.cm-meta { color: #ffb86c; }
-.cm-operator { color: #ff79c6; }
-
-/* Preview pane */
-#preview {
-  width: 40%;
-  border-left: 2px solid #ccc;
-  padding: 10px;
-  background: white;
-  font-family: var(--font-ui);
-}
-    </style>
-  </head>
-  <body>
-    <div id="sidebar">
-      <h3>Files</h3>
-      <button id="htmlFile">index.html</button>
-      <button id="cssFile">style.css</button>
-      <button id="jsFile">script.js</button>
-    </div>
-
-    <div id="main">
-      <div id="editor-container">
-        <textarea id="editor"></textarea>
-      </div>
-      <iframe id="preview"></iframe>
-    </div>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <link id="favicon" rel="icon" href="https://glitch.com/favicon.ico" type="image/x-icon" />
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        let editor = CodeMirror.fromTextArea(
-          document.getElementById("editor"),
-          {
-            mode: "htmlmixed",
-            theme: "default",
-            lineNumbers: true,
+      (function () {
+        try {
+          var path = document.location.hash.split('?')[0].split('/');
+          var domain = path[1];
+
+          var NOT_DOMAINS = ['new-project', 'sign-in', 'facebook', 'sign-out', 'sign-up', 'email-login'];
+
+          if (domain === undefined || domain.length === 0 || path.length !== 2 || NOT_DOMAINS.includes(domain)) {
+            return;
           }
-        );
 
-        let files = {
-          html: "<h1>Hello, CodeMirror!</h1>",
-          css: "h1 { color: red; }",
-          js: "console.log('Hello, CodeMirror!');",
-        };
-
-        function updateEditor(mode, content) {
-          editor.setOption("mode", mode);
-          editor.setValue(content);
+          new Image().src = `https://api.glitch.com/${domain}/preempt`;
+        } catch (e) {
+          console.error(e);
         }
-
-        function updatePreview() {
-          let output = document.getElementById("preview").contentDocument;
-
-          output.open();
-          output.write(`
-        ${files.html}
-        <style>${files.css}</style>
-    `);
-          output.close();
-
-          let scriptElement = output.createElement("script");
-          scriptElement.textContent = files.js;
-          output.body.appendChild(scriptElement);
-        }
-
-        document
-          .getElementById("htmlFile")
-          .addEventListener("click", function () {
-            updateEditor("htmlmixed", files.html);
-          });
-
-        document
-          .getElementById("cssFile")
-          .addEventListener("click", function () {
-            updateEditor("css", files.css);
-          });
-
-        document
-          .getElementById("jsFile")
-          .addEventListener("click", function () {
-            updateEditor("javascript", files.js);
-          });
-
-        editor.on("change", function () {
-          let mode = editor.getOption("mode");
-          if (mode === "htmlmixed") files.html = editor.getValue();
-          if (mode === "css") files.css = editor.getValue();
-          if (mode === "javascript") files.js = editor.getValue();
-          updatePreview();
-        });
-
-        updateEditor("htmlmixed", files.html);
-        updatePreview();
-      });
+      })();
     </script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VB0TBS64TF"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-VB0TBS64TF');
+    </script>
+
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+default-src
+  'self';
+connect-src
+  'self'
+  api.glitch.com api.glitch.development api.staging.glitch.com api.testing.staging.glitch.com api.glitch.localprojecthost:3031
+  wss://api.glitch.com wss://api.glitch.development wss://api.staging.glitch.com wss://glitch.development wss://api.testing.staging.glitch.com ws://api.glitch.localprojecthost:3031
+  cdn.glitch.com
+  www.google-analytics.com
+  cdn.glitch.me
+  cdn.glitch.global
+  cdn.staging.glitch.com
+  cdn.staging.glitch.me
+  cdn.staging.glitch.global
+  data.product.glitch.com
+  https://*.woopra.com
+  api.github.com
+  libraries.io
+  s3.amazonaws.com
+  https://securetoken.googleapis.com
+  https://www.googleapis.com
+  https://*.gstatic.com
+  https://settings.luckyorange.net
+  wss://visitors.live
+  wss://*.visitors.live https://pubsub.googleapis.com https://api.luckyorange.com
+  https://sentry.io
+  https://support-poster.glitch.me/post
+  https://api.amplitude.com
+  https://cdn.optimizely.com
+  https://*.algolianet.com https://*.algolia.net
+  https://api.digitalocean.com
+  data:
+  blob:
+  ws://localhost:3000/
+  wss://localhost:3000/;
+font-src
+  cloud.webtype.com
+  cdn.glitch.com
+  cdn.glitch.me
+  cdn.glitch.global
+  cdn.staging.glitch.com
+  cdn.staging.glitch.me
+  cdn.staging.glitch.global
+  cloud.typenetwork.com;
+frame-src
+  https://*.glitch.me https://*.glitch.dev https://*.glitch.app https://*.glitch.staging.me https://*.glitch.development https://*.testing.staging.glitch.com http://*.glitch.localprojecthost:3031
+  https://*.glitch.dev https://*.glitch.staging.dev https://*.glitch.devdev http://*.danielluxemburg.glitch.lol
+  https://*.glitch.app https://*.glitch.staging.app https://*.edgecompute.app
+  https://accounts.google.com
+  https://content-firebase.googleapis.com/
+  https://www.google.com
+  https://*.ondigitalocean.app
+  blob:
+  data:
+  'self';
+img-src
+  'self'
+  https://*
+  blob:
+  data:
+  https://d10lpsik1i8c69.cloudfront.net;
+media-src
+  'self'
+  https://*
+  blob:
+  data:;
+object-src
+  blob:
+  data:
+  'self';
+script-src
+  'self'
+  'wasm-unsafe-eval'
+  https://cdn.jsdelivr.net
+  https://apis.google.com
+  https://cdnjs.cloudflare.com
+  https://*.woopra.com
+  www.googletagmanager.com
+  'sha256-aROmP5KBVON8dHdF7kTobxNwhI67hJuBpk+jNh/jbM4='
+  'sha256-lIXJkTrfgeKmujhwsIkqzNbMkplZdPFm1ERXsf46uOw='
+  'sha256-To0Iwo79L42agXa29pvaAn64gM4rwT1BflbRPGdqcUg='
+  'sha256-IWN+DH0UXsSKPql06C66AvLM8/jMYbOe+wVRfPlzHDY='
+  http://www.luckyorange.com https://ssl.luckyorange.com https://d10lpsik1i8c69.cloudfront.net
+  https://unpkg.com/
+  https://www.google.com
+  https://www.gstatic.com
+  https://cdn.amplitude.com;
+style-src
+  'self'
+  'unsafe-inline'
+  https://cloud.webtype.com
+  https://d10lpsik1i8c69.cloudfront.net
+  cdn.glitch.com
+  cdn.glitch.me
+  cdn.glitch.global
+  cdn.staging.glitch.com
+  cdn.staging.glitch.me
+  cdn.staging.glitch.global
+  cloud.typenetwork.com;
+worker-src
+  'self'
+  blob:
+"
+    />
+
+    <title data-rh="true">Glitch :･ﾟ✧</title>
+    <meta data-rh="true" name="description" content="Simple, powerful, free tools to create and use millions of apps." />
+    <meta data-rh="true" property="og:type" content="website" />
+    <meta data-rh="true" property="og:url" content="https://glitch.com/edit" />
+    <meta data-rh="true" property="og:title" content="Glitch Code Editor ･ﾟ✧" />
+    <meta data-rh="true" property="og:description" content="Simple, powerful, free tools to create and use millions of apps." />
+    <meta
+      data-rh="true"
+      property="og:image"
+      content="https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515%2Fglitch-social.png?v=1619667563754"
+    />
+    <meta data-rh="true" name="twitter:card" content="summary" />
+    <meta data-rh="true" name="twitter:site" content="@glitch" />
+    <meta data-rh="true" name="twitter:title" content="Glitch: The friendly community where everyone builds the web" />
+    <meta data-rh="true" name="twitter:description" content="Simple, powerful, free tools to create and use millions of apps." />
+    <meta
+      data-rh="true"
+      name="twitter:image"
+      content="https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515%2Fglitch-social.png?v=1619667563754"
+    />
+    <meta data-rh="true" name="twitter:url" content="https://glitch.com/edit" />
+    <noscript>
+      <title>Glitch</title>
+    </noscript>
+
+    <meta
+      name="description"
+      content="Combining automated deployment, instant hosting &amp; collaborative editing, Glitch gets you straight to coding so you can build full-stack web apps, fast"
+    />
+    <meta name="keywords" content="developer, javascript, nodejs, editor, ide, development, online, web, code editor, html, css" />
+
+    <!-- facebook open graph tags -->
+    <meta name="og:type" content="website" />
+    <meta name="og:url" content="https://glitch.com/edit" />
+    <meta name="og:title" content="Glitch" />
+    <meta
+      name="og:description"
+      content="Combining automated deployment, instant hosting &amp; collaborative editing, Glitch gets you straight to coding so you can build full-stack web apps, fast"
+    />
+    <meta name="og:image" content="https://glitch.com/edit/images/logos/glitch/social-card@2x.png" />
+    <!-- twitter card tags (stacks with og: tags) -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@glitch" />
+    <meta name="twitter:title" content="Glitch" />
+    <meta
+      name="twitter:description"
+      content="Combining automated deployment, instant hosting &amp; collaborative editing, Glitch gets you straight to coding so you can build full-stack web apps, fast"
+    />
+    <meta name="twitter:image" content="https://glitch.com/edit/images/logos/glitch/social-card@2x.png" />
+    <meta name="twitter:image:alt" content="Glitch Logo" />
+    <meta name="twitter:url" content="https://glitch.com" />
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script type="module" crossorigin src="https://glitch.com//edit/assets/index.76050679.js"></script>
+    <link rel="modulepreload" href="https://glitch.com//edit/assets/design.53ed53ca.js">
+    <link rel="modulepreload" href="https://glitch.com//edit/assets/codemirror.bff8dd02.js">
+    <link rel="modulepreload" href="https://glitch.com//edit/assets/state.0d109f0a.js">
+    <link rel="modulepreload" href="https://glitch.com//edit/assets/components.76787088.js">
+    <link rel="modulepreload" href="https://glitch.com//edit/assets/markdown.00274f23.js">
+    <link rel="modulepreload" href="https://glitch.com//edit/assets/glitch.f737e327.js">
+    <link rel="stylesheet" href="/index.css">
+  </head>
+  <body>
+    <noscript>
+      <h1>To use Glitch, please enable JavaScript</h1>
+    </noscript>
+
+    <div id="__react-overlay-container"></div>
+    <div id="__react-pop-root"></div>
+    <div id="__react-app-root"></div>
+
+    <div id="__recaptcha" style="width: 0px"></div>
+
+    <script src="https://unpkg.com/jshint@2.9.6/dist/jshint.js"></script>
+    <script src="https://unpkg.com/jsonlint@1.6.3/web/jsonlint.js"></script>
+    <script src="https://unpkg.com/stylelint-bundle@13.8.0/dist/stylelint-bundle.min.js"></script>
+    
+    <script src="https://apis.google.com/js/api.js"></script>
   </body>
 </html>
