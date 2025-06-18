@@ -68,7 +68,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  border-right: 1px solid var(--color-border);
 }
 #sidebar {
   width: 220px;
@@ -111,6 +110,16 @@ body {
 }
 .icon-btn:hover {
   border-color: var(--color-accent);
+}
+.file-btn {
+  padding: 0px;
+  border: none;
+  border-left: 2px solid var(--color-border);
+  border-radius: 0px;
+}
+.file-btn:hover {
+  background: rgb(0 0 0 / 28%);
+  color: var(--color-white);
 }
 
 /* Project name */
@@ -177,14 +186,14 @@ body {
 
 /* Icons */
 .icon {
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: var(--btn-radius);
-    padding: 4px;
-    transition: var(--transition);
-    line-height: 1;
-    background: transparent;
-    border: 2px solid var(--color-border);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: var(--btn-radius);
+  padding: 4px;
+  transition: var(--transition);
+  line-height: 1;
+  background: transparent;
+  border: 2px solid var(--color-border);
 }
 .icon.gray {
   color: var(--color-muted);
@@ -193,10 +202,10 @@ body {
   color: var(--color-text);
 }
 .icon.red {
-background-color: rgb(255 48 48 / 27%);
+  background-color: rgb(255 48 48 / 27%);
 }
 .icon.red:hover {
-background-color: rgb(255 48 48 / 40%);
+  background-color: rgb(255 48 48 / 40%);
 }
 
 /* Toggle */
@@ -263,16 +272,29 @@ background-color: rgb(255 48 48 / 40%);
 }
 
 /* Notification urgency */
-.notification.low { border-left-color: var(--color-urgency-low); }
-.notification.medium { border-left-color: var(--color-urgency-medium); }
-.notification.high { border-left-color: var(--color-urgency-high); }
-
-/* Profile menu */
-#profile-menu-wrapper {
-  position: relative;
-  margin-left: 12px;
+.notification.low {
+  border-left-color: var(--color-urgency-low);
 }
-#profile-btn {
+.notification.medium {
+  border-left-color: var(--color-urgency-medium);
+}
+.notification.high {
+  border-left-color: var(--color-urgency-high);
+}
+
+/* Profile containers */
+#profile-menu-wrapper,
+.profile-stack {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+/* Profile avatar buttons */
+#profile-btn,
+.profile-avatar-btn {
   background: none;
   border: none;
   padding: 0;
@@ -281,28 +303,37 @@ background-color: rgb(255 48 48 / 40%);
   overflow: hidden;
   width: 32px;
   height: 32px;
+  z-index: 1;
 }
-#profile-btn img,
-#profile-dropdown img,
-.profile-header img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
+.profile-avatar-btn {
   border: 2px solid var(--color-border);
+  margin-left: -8px;
   transition: border-color 0.2s ease;
-  display: block;
 }
-#profile-btn:hover img,
-.profile-header img:hover {
+.profile-stack .profile-avatar-btn:first-child {
+  margin-left: 0;
+}
+.profile-avatar-btn:hover {
   border-color: var(--color-accent);
-}
-/* Override dropdown img size */
-#profile-dropdown img {
-  max-width: 48px;
-  max-height: 48px;
+  z-index: 2;
 }
 
+/* Profile images */
+#profile-btn img,
+.profile-avatar-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  border: 2px solid var(--color-border);
+  transition: border-color 0.2s ease;
+}
+#profile-btn:hover img {
+  border-color: var(--color-accent);
+}
+
+/* Dropdown */
 #profile-dropdown {
   position: absolute;
   right: 0;
@@ -314,13 +345,15 @@ background-color: rgb(255 48 48 / 40%);
   width: 220px;
   display: flex;
   flex-direction: column;
-  z-index: 9999;
+  z-index: 1000;
   font-family: var(--font-ui);
   animation: fadeSlideIn 0.15s ease-out;
 }
 #profile-dropdown.hidden {
   display: none;
 }
+
+/* Dropdown header */
 .profile-header {
   display: flex;
   align-items: center;
@@ -340,6 +373,17 @@ background-color: rgb(255 48 48 / 40%);
   font-size: 12px;
   color: var(--color-muted);
 }
+.profile-header img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  border: 2px solid var(--color-border);
+  transition: border-color 0.2s ease;
+}
+
+/* Dropdown items */
 .dropdown-item {
   background: none;
   border: none;
@@ -353,6 +397,11 @@ background-color: rgb(255 48 48 / 40%);
 }
 .dropdown-item:hover {
   background: var(--color-bg);
+}
+
+/* Utility: Avatar overlap on stack */
+.profile-stack .profile-avatar-btn {
+  position: relative;
 }
 
 /* Status bar */
@@ -371,7 +420,10 @@ background-color: rgb(255 48 48 / 40%);
 /* Modal */
 .modal {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -383,7 +435,8 @@ background-color: rgb(255 48 48 / 40%);
 }
 .modal-overlay {
   position: absolute;
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(2px);
 }
